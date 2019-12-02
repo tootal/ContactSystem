@@ -11,12 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 class PersonAdapter extends ArrayAdapter<Person> {
     private final int resourceId;
 
-    public PersonAdapter(@NonNull Context context, int resource, @NonNull List<Person> objects) {
+    PersonAdapter(@NonNull Context context, int resource, @NonNull List<Person> objects) {
         super(context, resource, objects);
         this.resourceId = resource;
     }
@@ -36,7 +35,8 @@ class PersonAdapter extends ArrayAdapter<Person> {
             view=convertView;
             viewHolder=(ViewHolder)view.getTag();
         }
-        viewHolder.personName.setText(Objects.requireNonNull(person).getName());
+        assert person != null;
+        viewHolder.personName.setText(person.getName());
         return view;
     }
 
