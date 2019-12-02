@@ -10,12 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
+import java.util.Objects;
 
-public class PersonAdapter extends ArrayAdapter<Person> {
-    private int resourceId;
+class PersonAdapter extends ArrayAdapter<Person> {
+    private final int resourceId;
 
     public PersonAdapter(@NonNull Context context, int resource, @NonNull List<Person> objects) {
         super(context, resource, objects);
@@ -37,7 +36,7 @@ public class PersonAdapter extends ArrayAdapter<Person> {
             view=convertView;
             viewHolder=(ViewHolder)view.getTag();
         }
-        viewHolder.personName.setText(person.getName());
+        viewHolder.personName.setText(Objects.requireNonNull(person).getName());
         return view;
     }
 

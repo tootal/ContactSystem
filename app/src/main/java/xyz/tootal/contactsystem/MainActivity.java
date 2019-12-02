@@ -7,14 +7,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private List<Person> personList=new ArrayList<>();
+    private final List<Person> personList=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +27,13 @@ public class MainActivity extends AppCompatActivity {
         PersonAdapter adapter=new PersonAdapter(MainActivity.this,R.layout.person_item,personList);
         ListView listView=findViewById(R.id.list_view);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Person person=personList.get(position);
+                Toast.makeText(MainActivity.this, String.valueOf(person.getNumber()), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initPeople() {
@@ -34,11 +45,8 @@ public class MainActivity extends AppCompatActivity {
             new Person("工商银行",95588),
             new Person("农业银行",95599)
         };
-        for(Person person:persons){
-            personList.add(person);
-        }
-        for(Person person:persons){
-            personList.add(person);
+        for(int i=0;i<5;i++){
+            personList.addAll(Arrays.asList(persons));
         }
     }
 

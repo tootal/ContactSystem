@@ -1,6 +1,6 @@
 package xyz.tootal.contactsystem;
 
-public class Person {
+class Person {
     private String name;
     private int number;
 
@@ -13,7 +13,7 @@ public class Person {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -21,7 +21,7 @@ public class Person {
         return number;
     }
 
-    public void setNumber(int number) {
+    private void setNumber(int number) {
         this.number = number;
     }
 }
