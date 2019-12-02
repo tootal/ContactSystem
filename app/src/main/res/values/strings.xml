@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">ContactSystem</string>
+    <string name="app_name">联系人管理系统</string>
+
+    <string name="menu_add">添加联系人</string>
+    <string name="menu_import">导入联系人</string>
+    <string name="menu_export">导出联系人</string>
 </resources>
