@@ -1,10 +1,12 @@
 package xyz.tootal.contactsystem;
 
-class Person {
-    private String name;
-    private int number;
+import java.io.Serializable;
 
-    public Person(String name, int number){
+class Person implements Serializable {
+    private String name;
+    private String number;
+
+    public Person(String name, String number){
         setName(name);
         setNumber(number);
     }
@@ -17,11 +19,11 @@ class Person {
         this.name = name;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    private void setNumber(int number) {
+    private void setNumber(String number) {
         this.number = number;
     }
 }

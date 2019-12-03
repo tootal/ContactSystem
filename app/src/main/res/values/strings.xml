@@ -4,4 +4,6 @@
     <string name="menu_add">添加联系人</string>
     <string name="menu_import">导入联系人</string>
     <string name="menu_export">导出联系人</string>
+    <string name="import_test_contact">导入测试通讯录</string>
+    <string name="import_from_system_contact">导入系统通讯录</string>
 </resources>
