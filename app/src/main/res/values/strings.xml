@@ -6,4 +6,7 @@
     <string name="menu_export">导出联系人</string>
     <string name="import_test_contact">导入测试通讯录</string>
     <string name="import_from_system_contact">导入系统通讯录</string>
+
+    <string name="person_name_lable">姓名：</string>
+    <string name="person_number_lable">电话：</string>
 </resources>

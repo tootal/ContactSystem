@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+        personList.add(new Person("Police","110"));
         personAdapter=new PersonAdapter(MainActivity.this,R.layout.person_item,personList);
         ListView listView=findViewById(R.id.list_view);
         listView.setAdapter(personAdapter);
@@ -33,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Person person=personList.get(position);
-                Toast.makeText(MainActivity.this, person.getNumber(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, person.getNumber(), Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this,PersonDetailActivity.class);
+                intent.putExtra("person",person);
+                startActivity(intent);
             }
         });
     }
