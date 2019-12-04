@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,11 +24,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private final List<Person> personList=new ArrayList<>();
     private PersonAdapter personAdapter;
+    private MyDatabaseHelper dbHelper;
+    private SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+        dbHelper=new MyDatabaseHelper(this,"Contact.db",null,1);
+        db=dbHelper.getWritableDatabase();
         personAdapter=new PersonAdapter(MainActivity.this,R.layout.person_item,personList);
+        initPersons();
         ListView listView=findViewById(R.id.list_view);
         listView.setAdapter(personAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -36,6 +43,21 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, person.getNumber(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void initPersons(){
+        Log.d(TAG, "initPersons: start");
+        Cursor cursor=db.rawQuery("select name,number from person",null);
+        if(cursor.moveToFirst()){
+            do{
+                String name=cursor.getString(cursor.getColumnIndex("name"));
+                String number=cursor.getString(cursor.getColumnIndex("number"));
+                Person person=new Person(name,number);
+                personList.add(person);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+        personAdapter.notifyDataSetChanged();
     }
 
 
