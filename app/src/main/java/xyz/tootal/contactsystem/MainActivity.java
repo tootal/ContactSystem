@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
+//        personList.add(new Person("Police","110"));
         dbHelper=new MyDatabaseHelper(this,"Contact.db",null,1);
         db=dbHelper.getWritableDatabase();
         personAdapter=new PersonAdapter(MainActivity.this,R.layout.person_item,personList);
@@ -40,7 +41,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Person person=personList.get(position);
-                Toast.makeText(MainActivity.this, person.getNumber(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, person.getNumber(), Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(MainActivity.this,PersonDetailActivity.class);
+                intent.putExtra("person",person);
+                startActivity(intent);
             }
         });
     }
@@ -94,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onActivityResult: 1");
 //                    Toast.makeText(this, "get "+data.getStringExtra("SystemContacts"), Toast.LENGTH_SHORT).show();
                     ArrayList systemContactList=(ArrayList<Person>) data.getSerializableExtra("SystemContacts");
+                    for(int i=0;i<systemContactList.size();i++){
+                        Person person=(Person)systemContactList.get(i);
+                        db.execSQL("insert into person(name,number) values(?,?)",new String[]{person.getName(),person.getNumber()});
+                    }
                     personList.addAll(systemContactList);
                     personAdapter.notifyDataSetChanged();
                     Log.d(TAG, "onActivityResult: added");
