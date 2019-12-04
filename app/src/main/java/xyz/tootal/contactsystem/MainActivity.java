@@ -9,7 +9,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private PersonAdapter personAdapter;
     private MyDatabaseHelper dbHelper;
     private SQLiteDatabase db;
+    private int itemId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         initPersons();
         ListView listView=findViewById(R.id.list_view);
         listView.setAdapter(personAdapter);
+        registerForContextMenu(listView);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -64,6 +69,36 @@ public class MainActivity extends AppCompatActivity {
         personAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo)menuInfo;
+        Person person=personList.get(info.position);
+        menu.setHeaderTitle(person.getName());
+        menu.add(0,1,1,"编辑");
+        menu.add(0,2,1,"多选");
+        menu.add(0,3,1,"删除");
+        menu.add(0,4,1,"分享");
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        switch (item.getItemId()){
+            case 1://编辑
+                Toast.makeText(this, "编辑功能尚未实现", Toast.LENGTH_SHORT).show();
+                break;
+            case 2:
+                Toast.makeText(this, "多选功能尚未实现", Toast.LENGTH_SHORT).show();
+                break;
+            case 3:
+                Toast.makeText(this, "删除功能尚未实现", Toast.LENGTH_SHORT).show();
+                break;
+            case 4:
+                Toast.makeText(this, "分享功能尚未实现", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
