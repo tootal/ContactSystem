@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -29,12 +30,14 @@ public class MainActivity extends AppCompatActivity {
     private MyDatabaseHelper dbHelper;
     private SQLiteDatabase db;
     private int itemId;
+    private int maxId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
 //        personList.add(new Person("Police","110"));
+        initSharedPrefs();
         dbHelper=new MyDatabaseHelper(this,"Contact.db",null,1);
         db=dbHelper.getWritableDatabase();
         personAdapter=new PersonAdapter(MainActivity.this,R.layout.person_item,personList);
@@ -54,14 +57,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initSharedPrefs(){
+        SharedPreferences pref=getSharedPreferences("data",MODE_PRIVATE);
+        maxId=pref.getInt("maxId",0);
+    }
+
+    @Override
+    protected void onPause() {
+        saveSharedPrefs();
+        super.onPause();
+    }
+
+    private void saveSharedPrefs(){
+        SharedPreferences.Editor editor=getSharedPreferences("data",MODE_PRIVATE).edit();
+        editor.putInt("maxId",0);
+        editor.apply();
+    }
+
     private void initPersons(){
-        Log.d(TAG, "initPersons: start");
-        Cursor cursor=db.rawQuery("select name,number from person",null);
+//        Log.d(TAG, "initPersons: start");
+        Cursor cursor=db.rawQuery("select id,name,number from person",null);
         if(cursor.moveToFirst()){
             do{
+                int id=cursor.getInt(cursor.getColumnIndex("id"));
                 String name=cursor.getString(cursor.getColumnIndex("name"));
                 String number=cursor.getString(cursor.getColumnIndex("number"));
-                Person person=new Person(name,number);
+                Person person=new Person(id,name,number);
                 personList.add(person);
             }while(cursor.moveToNext());
         }
@@ -80,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
         menu.add(0,4,1,"分享");
     }
 
+    private void deletePerson(int pos){
+        Log.d(TAG, "deletePerson: pos="+String.valueOf(pos));
+        db.execSQL("delete from person where id=?",new String[]{String.valueOf(personList.get(pos).getId())});
+        personList.remove(pos);
+        personAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
@@ -91,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "多选功能尚未实现", Toast.LENGTH_SHORT).show();
                 break;
             case 3:
-                Toast.makeText(this, "删除功能尚未实现", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "删除功能尚未实现", Toast.LENGTH_SHORT).show();
+                deletePerson(info.position);
                 break;
             case 4:
                 Toast.makeText(this, "分享功能尚未实现", Toast.LENGTH_SHORT).show();
@@ -130,25 +159,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        Log.d(TAG, "onActivityResult: begin");
         switch (requestCode){
-            case 1:
+            case 1://import persons
                 if(resultCode==RESULT_OK){
 //                    Log.d(TAG, "onActivityResult: 1");
 //                    Toast.makeText(this, "get "+data.getStringExtra("SystemContacts"), Toast.LENGTH_SHORT).show();
                     ArrayList systemContactList=(ArrayList<Person>) data.getSerializableExtra("SystemContacts");
                     for(int i=0;i<systemContactList.size();i++){
                         Person person=(Person)systemContactList.get(i);
-                        db.execSQL("insert into person(name,number) values(?,?)",new String[]{person.getName(),person.getNumber()});
+                        maxId++;
+                        person.setId(maxId);
+                        db.execSQL("insert into person(id,name,number) values(?,?,?)",new String[]{
+                                String.valueOf(person.getId()),
+                                person.getName(),
+                                person.getNumber()
+                        });
                     }
                     personList.addAll(systemContactList);
                     personAdapter.notifyDataSetChanged();
 //                    Log.d(TAG, "onActivityResult: added");
                 }
                 break;
-            case 2:
+            case 2://add new person
                 if(resultCode==RESULT_OK){
-                    Log.d(TAG, "onActivityResult: start2");
+//                    Log.d(TAG, "onActivityResult: start2");
                     Person person=(Person)data.getSerializableExtra("new_person");
-                    db.execSQL("insert into person(name,number) values(?,?)",new String[]{person.getName(),person.getNumber()});
+                    maxId++;
+                    person.setId(maxId);
+                    db.execSQL("insert into person(id,name,number) values(?,?,?)",new String[]{
+                            String.valueOf(person.getId()),
+                            person.getName(),
+                            person.getNumber()
+                    });
                     personList.add(person);
                     personAdapter.notifyDataSetChanged();
                 }

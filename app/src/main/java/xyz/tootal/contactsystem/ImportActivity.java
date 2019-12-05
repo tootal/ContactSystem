@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -62,7 +61,8 @@ public class ImportActivity extends AppCompatActivity {
                 new Person("农业银行","95599")
         };
         personList.addAll(Arrays.asList(persons));
-        Toast.makeText(this, "add "+String.valueOf(persons.length)+" test contacts.", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "add "+String.valueOf(persons.length)+" test contacts.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "成功导入"+String.valueOf(persons.length)+"条测试通讯录", Toast.LENGTH_SHORT).show();
     }
 
     private void readSystemContacts(){
@@ -76,7 +76,8 @@ public class ImportActivity extends AppCompatActivity {
                     Person person=new Person(displayName,number);
                     personList.add(person);
                 }
-                Toast.makeText(this, "import "+String.valueOf(personList.size())+" contacts.", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "import "+String.valueOf(personList.size())+" contacts.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "成功导入"+String.valueOf(personList.size())+"条系统通讯录", Toast.LENGTH_SHORT).show();
             }
         }catch (Exception e){
             e.printStackTrace();
