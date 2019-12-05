@@ -105,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.menu_add:
                 Log.d(TAG, "onOptionsItemSelected: add");
+                Intent intent2=new Intent(MainActivity.this,NewActivity.class);
+                startActivityForResult(intent2,2);
                 break;
             case R.id.menu_import:
 //                Log.d(TAG, "onOptionsItemSelected: import");
@@ -126,11 +128,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.d(TAG, "onActivityResult: begin");
+//        Log.d(TAG, "onActivityResult: begin");
         switch (requestCode){
             case 1:
                 if(resultCode==RESULT_OK){
-                    Log.d(TAG, "onActivityResult: 1");
+//                    Log.d(TAG, "onActivityResult: 1");
 //                    Toast.makeText(this, "get "+data.getStringExtra("SystemContacts"), Toast.LENGTH_SHORT).show();
                     ArrayList systemContactList=(ArrayList<Person>) data.getSerializableExtra("SystemContacts");
                     for(int i=0;i<systemContactList.size();i++){
@@ -139,9 +141,17 @@ public class MainActivity extends AppCompatActivity {
                     }
                     personList.addAll(systemContactList);
                     personAdapter.notifyDataSetChanged();
-                    Log.d(TAG, "onActivityResult: added");
+//                    Log.d(TAG, "onActivityResult: added");
                 }
                 break;
+            case 2:
+                if(resultCode==RESULT_OK){
+                    Log.d(TAG, "onActivityResult: start2");
+                    Person person=(Person)data.getSerializableExtra("new_person");
+                    db.execSQL("insert into person(name,number) values(?,?)",new String[]{person.getName(),person.getNumber()});
+                    personList.add(person);
+                    personAdapter.notifyDataSetChanged();
+                }
         }
         super.onActivityResult(requestCode,resultCode,data);
     }
