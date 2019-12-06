@@ -28,7 +28,7 @@ public class NewActivity extends AppCompatActivity {
                 Person person=new Person(new_name_edittext.getText().toString(),new_number_edittext.getText().toString());
                 Intent intent=new Intent();
                 intent.putExtra("new_person",person);
-                Log.d(TAG, "onClick: add new person");
+//                Log.d(TAG, "onClick: add new person");
                 setResult(RESULT_OK,intent);
                 NewActivity.this.finish();
             }
