@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/new_avatar_menu_camera"
+        android:title="拍照"
+        />
+    <item android:id="@+id/new_avatar_menu_default"
+        android:title="从预置图片中选择"
+        />
+    <item android:id="@+id/new_avatar_menu_select"
+        android:title="从相册中选择照片"
+        />
+</menu>

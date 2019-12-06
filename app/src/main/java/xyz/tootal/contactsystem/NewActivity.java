@@ -1,13 +1,18 @@
 package xyz.tootal.contactsystem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 public class NewActivity extends AppCompatActivity {
@@ -40,5 +45,35 @@ public class NewActivity extends AppCompatActivity {
                 finish();
             }
         });
+        final ImageButton new_avatar_imagebutton=findViewById(R.id.new_avatar_imagebutton);
+        registerForContextMenu(new_avatar_imagebutton);
+        new_avatar_imagebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAvatarMenu(new_avatar_imagebutton);
+            }
+        });
+    }
+    private void showAvatarMenu(View v){
+        PopupMenu popupMenu=new PopupMenu(this,v);
+        getMenuInflater().inflate(R.menu.new_avatar,popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.new_avatar_menu_camera:
+                        Toast.makeText(NewActivity.this, "正在启动相机", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.new_avatar_menu_default:
+                        Toast.makeText(NewActivity.this, "正在加载预置图片", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.new_avatar_menu_select:
+                        Toast.makeText(NewActivity.this, "正在打开图库", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return true;
+            }
+        });
+        popupMenu.show();
     }
 }
