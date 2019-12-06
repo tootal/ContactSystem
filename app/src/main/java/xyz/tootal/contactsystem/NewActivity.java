@@ -1,10 +1,17 @@
 package xyz.tootal.contactsystem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -15,8 +22,14 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class NewActivity extends AppCompatActivity {
     private static final String TAG = "NewActivity";
+    private Uri imageUri;
+    private ImageButton new_avatar_imagebutton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +38,7 @@ public class NewActivity extends AppCompatActivity {
         Button new_cancle_button=findViewById(R.id.new_cancle_button);
         final EditText new_name_edittext=findViewById(R.id.new_name_edittext);
         final EditText new_number_edittext=findViewById(R.id.new_number_edittext);
-        Log.d(TAG, "onCreate: start");
+//        Log.d(TAG, "onCreate: start");
         new_confirm_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,7 +58,7 @@ public class NewActivity extends AppCompatActivity {
                 finish();
             }
         });
-        final ImageButton new_avatar_imagebutton=findViewById(R.id.new_avatar_imagebutton);
+        new_avatar_imagebutton=findViewById(R.id.new_avatar_imagebutton);
         registerForContextMenu(new_avatar_imagebutton);
         new_avatar_imagebutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +75,8 @@ public class NewActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.new_avatar_menu_camera:
-                        Toast.makeText(NewActivity.this, "正在启动相机", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(NewActivity.this, "正在启动相机", Toast.LENGTH_SHORT).show();
+                        takePhoto();
                         break;
                     case R.id.new_avatar_menu_default:
                         Toast.makeText(NewActivity.this, "正在加载预置图片", Toast.LENGTH_SHORT).show();
@@ -75,5 +89,40 @@ public class NewActivity extends AppCompatActivity {
             }
         });
         popupMenu.show();
+    }
+
+    private void takePhoto(){
+        File outputImage=new File(getExternalCacheDir(),"output_image.jpg");
+        try{
+            if(outputImage.exists()){
+                outputImage.delete();
+            }
+            outputImage.createNewFile();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        if(Build.VERSION.SDK_INT>=24){
+            imageUri= FileProvider.getUriForFile(NewActivity.this,"xyz.tootal.contactsystem.fileprovider",outputImage);
+        }else{
+            imageUri=Uri.fromFile(outputImage);
+        }
+        Intent intent=new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+        startActivityForResult(intent,1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 1://take photo
+                try{
+                    Bitmap bitmap= BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+                    new_avatar_imagebutton.setImageBitmap(bitmap);
+                }catch (FileNotFoundException e){
+                    e.printStackTrace();
+                }
+                break;
+        }
     }
 }
