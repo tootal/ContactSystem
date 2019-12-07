@@ -111,7 +111,11 @@ public class MainActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch (item.getItemId()){
             case 1://编辑
-                Toast.makeText(this, "编辑功能尚未实现", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "编辑功能尚未实现", Toast.LENGTH_SHORT).show();
+                Person person=personList.get(info.position);
+                Intent intent=new Intent(MainActivity.this,ModifyDetailActivity.class);
+                intent.putExtra("person",person);
+                startActivity(intent);
                 break;
             case 2:
                 Toast.makeText(this, "多选功能尚未实现", Toast.LENGTH_SHORT).show();
