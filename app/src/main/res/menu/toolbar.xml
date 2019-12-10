@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/main_toolbar_import_export"
+        android:icon="@drawable/ic_import_export_black_24dp"
+        android:title="导入导出"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/test_litepal"
+        android:icon="@drawable/ic_settings"
+        android:title="测试数据库"
+        app:showAsAction="never"/>
+</menu>
