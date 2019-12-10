@@ -47,7 +47,7 @@ public class NewActivity extends AppCompatActivity {
     private EditText person_note_new_edittext;
     private ImageView person_image_new_imageview;
     private Uri imageUri;
-
+    long curTime;
     public static final int TAKE_PHOTO = 1;
 
     public static final int CHOOSE_PHOTO = 2;
@@ -74,6 +74,7 @@ public class NewActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
 //            actionBar.setHomeAsUpIndicator(R.drawable.ic_cancle);
         }
+        imageUri=Util.imageTranslateURI(this,R.drawable.avatar);
     }
 
     private void showAvatarMenu(View v){
@@ -110,7 +111,8 @@ public class NewActivity extends AppCompatActivity {
     }
 
     private void takePhoto(){
-        File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
+        curTime=System.currentTimeMillis();
+        File outputImage = new File(getExternalCacheDir(), String.valueOf(curTime)+".jpg");
         try {
             if (outputImage.exists()) {
                 outputImage.delete();
@@ -224,6 +226,7 @@ public class NewActivity extends AppCompatActivity {
 
     private void displayImage(String imagePath) {
         if (imagePath != null) {
+            imageUri=Uri.parse(imagePath);
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
             person_image_new_imageview.setImageBitmap(bitmap);
         } else {
@@ -247,7 +250,9 @@ public class NewActivity extends AppCompatActivity {
             case R.id.new_done:
                 Person person=new Person(person_name_new_edittext.getText().toString(),person_number_new_edittext.getText().toString());
                 person.setNote(person_note_new_edittext.getText().toString());
-                person.setImageUri(imageUri.toString());
+                if(imageUri!=null){
+                    person.setImageUri(imageUri.toString());
+                }
                 Intent intent2=new Intent();
                 intent2.putExtra("new_person",person);
                 setResult(RESULT_OK,intent2);

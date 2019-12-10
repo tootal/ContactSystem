@@ -22,9 +22,7 @@ import android.widget.Toast;
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -138,10 +136,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent=new Intent(this,ImportExportActivity.class);
                 startActivityForResult(intent,2);
                 break;
-            case R.id.test_litepal:
-                LitePal.getDatabase();
-                Person person=new Person("tootal","12345");
-                person.save();
             default:
         }
         return true;
@@ -166,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (resultCode){
                     case RESULT_OK:
                         ArrayList testContactList=(ArrayList<Person>) data.getSerializableExtra("import_data");
+                        if(testContactList==null)break;
                         for(int i=0;i<testContactList.size();i++){
                             Person person=(Person)testContactList.get(i);
                             person.save();

@@ -4,11 +4,6 @@
     <item
         android:id="@+id/main_toolbar_import_export"
         android:icon="@drawable/ic_import_export_black_24dp"
-        android:title="导入导出"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/test_litepal"
-        android:icon="@drawable/ic_settings"
-        android:title="测试数据库"
+        android:title="导入/导出"
         app:showAsAction="never"/>
 </menu>
