@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.List;
 
 public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder>{
@@ -62,13 +64,14 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                showPersonMenu(view);
+                showPersonMenu(view,holder);
                 return true;
             }
         });
         return holder;
     }
-    private void showPersonMenu(View v){
+    private void showPersonMenu(View v,ViewHolder holder){
+        final ViewHolder holder1=holder;
         PopupMenu popupMenu=new PopupMenu(mContext,v);
         popupMenu.getMenuInflater().inflate(R.menu.main_longclick,popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -76,13 +79,23 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.person_menu_show:
-                        Toast.makeText(mContext, "查看联系人", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, "查看联系人", Toast.LENGTH_SHORT).show();
+
+                        int position = holder1.getAdapterPosition();
+                        Person person = mPersonList.get(position);
+                        Intent intent=new Intent(mContext,PersonActivity.class);
+                        intent.putExtra("person",person);
+                        mContext.startActivity(intent);
                         break;
                     case R.id.person_menu_edit:
                         Toast.makeText(mContext, "编辑联系人", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.person_menu_delete:
-                        Toast.makeText(mContext, "删除联系人", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, "删除联系人", Toast.LENGTH_SHORT).show();
+                        int position1 = holder1.getAdapterPosition();
+                        Person person1 = mPersonList.get(position1);
+                        DataSupport.deleteAll(Person.class,"id = ?",String.valueOf(person1.getId()));
+                        Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.person_menu_share:
                         Toast.makeText(mContext, "分享联系人", Toast.LENGTH_SHORT).show();
