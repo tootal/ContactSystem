@@ -2,6 +2,9 @@ package xyz.tootal.contactsystem;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -20,15 +23,20 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ImportExportActivity extends AppCompatActivity {
+
+    private List<Person> personList;
+
     private DrawerLayout mDrawerLayout;
     private TextView import_testdata_textview;
     private TextView import_systemdata_textview;
     private TextView import_json_textview;
-    private TextView export_json_textview;
+    private TextView export_systemdata_textview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +56,7 @@ public class ImportExportActivity extends AppCompatActivity {
         import_testdata_textview=(TextView) findViewById(R.id.import_testdata_textview);
         import_systemdata_textview=(TextView) findViewById(R.id.import_systemdata_textview);
         import_json_textview=(TextView) findViewById(R.id.import_json_textview);
-        export_json_textview=(TextView) findViewById(R.id.export_json_textview);
+        export_systemdata_textview=(TextView) findViewById(R.id.export_systemdata_textview);
     }
 
     private void setClickListener(){
@@ -78,10 +86,17 @@ public class ImportExportActivity extends AppCompatActivity {
                 Toast.makeText(ImportExportActivity.this, "导入JSON文件功能尚未实现", Toast.LENGTH_SHORT).show();
             }
         });
-        export_json_textview.setOnClickListener(new View.OnClickListener() {
+        export_systemdata_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ImportExportActivity.this, "导出JSON文件功能尚未实现", Toast.LENGTH_SHORT).show();
+                if(ContextCompat.checkSelfPermission(ImportExportActivity.this, Manifest.permission.WRITE_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(ImportExportActivity.this,new String[]{
+                            Manifest.permission.WRITE_CONTACTS
+                    },1);
+                }else{
+                    writeSystemContacts();
+                }
+                Toast.makeText(ImportExportActivity.this, "成功导出到系统通讯录", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -124,6 +139,42 @@ public class ImportExportActivity extends AppCompatActivity {
                 cursor.close();
             }
         }
+    }
+
+    private void writeSystemContacts(){
+
+        personList= DataSupport.findAll(Person.class);
+
+        for(int i=0;i<personList.size();i++){
+            ContentValues values = new ContentValues();
+
+            // 向RawContacts.CONTENT_URI空值插入，
+            // 先获取Android系统返回的rawContactId
+            // 后面要基于此id插入值
+            Uri rawContactUri = getBaseContext().getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, values);
+            long rawContactId = ContentUris.parseId(rawContactUri);
+            values.clear();
+
+            values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+            // 内容类型
+            values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
+            // 联系人名字
+            values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, personList.get(i).getName());
+            // 向联系人URI添加联系人名字
+            getBaseContext().getContentResolver().insert(ContactsContract.Data.CONTENT_URI, values);
+            values.clear();
+
+            values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
+            values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+            // 联系人的电话号码
+            values.put(ContactsContract.CommonDataKinds.Phone.NUMBER, personList.get(i).getNumber());
+            // 电话类型
+            values.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+            // 向联系人电话号码URI添加电话号码
+            getBaseContext().getContentResolver().insert(ContactsContract.Data.CONTENT_URI, values);
+            values.clear();
+        }
+
     }
 
 
