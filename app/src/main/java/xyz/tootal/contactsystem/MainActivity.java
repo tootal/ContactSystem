@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             case 2://import
                 switch (resultCode){
-                    case RESULT_OK:
+                    case 1:
                         ArrayList testContactList=(ArrayList<Person>) data.getSerializableExtra("import_data");
                         if(testContactList==null)break;
                         for(int i=0;i<testContactList.size();i++){
@@ -170,6 +170,16 @@ public class MainActivity extends AppCompatActivity {
                         }
                         refreshPersons();
                         Toast.makeText(this, "成功导入测试数据", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 2:
+                        ArrayList testContactList2=(ArrayList<Person>) data.getSerializableExtra("import_system_data");
+                        if(testContactList2==null)break;
+                        for(int i=0;i<testContactList2.size();i++){
+                            Person person=(Person)testContactList2.get(i);
+                            person.save();
+                        }
+                        refreshPersons();
+                        Toast.makeText(this, "成功导入系统通讯录", Toast.LENGTH_SHORT).show();
                         break;
                 }
         }
