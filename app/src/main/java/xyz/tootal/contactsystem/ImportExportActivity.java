@@ -1,9 +1,15 @@
 package xyz.tootal.contactsystem;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +62,14 @@ public class ImportExportActivity extends AppCompatActivity {
         import_systemdata_textview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ImportExportActivity.this, "导入系统通讯录功能尚未实现", Toast.LENGTH_SHORT).show();
+                if(ContextCompat.checkSelfPermission(ImportExportActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(ImportExportActivity.this,new String[]{
+                            Manifest.permission.READ_CONTACTS
+                    },1);
+                }else{
+                    readSystemContacts();
+                }
+//                Toast.makeText(ImportExportActivity.this, "导入系统通讯录功能尚未实现", Toast.LENGTH_SHORT).show();
             }
         });
         import_json_textview.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +85,47 @@ public class ImportExportActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode){
+            case 1:
+                if (grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    readSystemContacts();
+                }else{
+                    Toast.makeText(this, "You denied the permisson", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+    private void readSystemContacts(){
+        ArrayList<Person> personList=new ArrayList<>();
+        Cursor cursor=null;
+        try{
+            cursor=getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,null,null,null);
+            if(cursor!=null){
+                while(cursor.moveToNext()){
+                    String displayName=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    String number=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    Person person=new Person(displayName,number);
+                    personList.add(person);
+                }
+
+                Intent intent=new Intent();
+                intent.putExtra("import_system_data", personList);
+//        intent.putExtra("SystemContacts","test string");
+                setResult(2,intent);
+                finish();
+//                Toast.makeText(this, "import "+String.valueOf(personList.size())+" contacts.", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(cursor!=null){
+                cursor.close();
+            }
+        }
+    }
+
 
     private void import_testdata(){
         ArrayList<Person> personList=new ArrayList<>();
@@ -103,7 +157,7 @@ public class ImportExportActivity extends AppCompatActivity {
         Intent intent=new Intent();
         intent.putExtra("import_data", personList);
 //        intent.putExtra("SystemContacts","test string");
-        setResult(RESULT_OK,intent);
+        setResult(1,intent);
         finish();
     }
 
