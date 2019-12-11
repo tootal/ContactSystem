@@ -92,11 +92,10 @@ public class ImportExportActivity extends AppCompatActivity {
                 if(ContextCompat.checkSelfPermission(ImportExportActivity.this, Manifest.permission.WRITE_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
                     ActivityCompat.requestPermissions(ImportExportActivity.this,new String[]{
                             Manifest.permission.WRITE_CONTACTS
-                    },1);
+                    },2);
                 }else{
                     writeSystemContacts();
                 }
-                Toast.makeText(ImportExportActivity.this, "成功导出到系统通讯录", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -106,6 +105,13 @@ public class ImportExportActivity extends AppCompatActivity {
             case 1:
                 if (grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
                     readSystemContacts();
+                }else{
+                    Toast.makeText(this, "You denied the permisson", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 2:
+                if (grantResults.length>0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                    writeSystemContacts();
                 }else{
                     Toast.makeText(this, "You denied the permisson", Toast.LENGTH_SHORT).show();
                 }
@@ -174,7 +180,8 @@ public class ImportExportActivity extends AppCompatActivity {
             getBaseContext().getContentResolver().insert(ContactsContract.Data.CONTENT_URI, values);
             values.clear();
         }
-
+        Toast.makeText(ImportExportActivity.this, "成功导出到系统通讯录", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 
