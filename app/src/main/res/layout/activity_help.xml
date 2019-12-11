@@ -111,7 +111,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="20dp"
                         android:singleLine="false"
-                        android:text="联系人可以添加头像，可以从相册中或拍照上传;\n操作方法：在添加联系人时，点击默认头像；编辑联系人时，点击已有的头像或是默认头像；\n\n联系人详情页可以直接拨打电话，或是发短信，方便快捷；\n"
+                        android:text="联系人可以添加头像，可以从相册中或拍照上传;\n操作方法：在添加联系人时，点击默认头像；编辑联系人时，点击已有的头像或是默认头像；\n\n联系人详情页可以直接拨打电话，或是发短信，方便快捷；\n\n主页右上角可以从系统通讯录导入数据和导出到系统通讯录，功能使用"
                         android:textSize="16dp" />
 
                 </android.support.v7.widget.CardView>

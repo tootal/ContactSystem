@@ -9,7 +9,4 @@
     <item android:id="@+id/person_menu_delete"
         android:title="删除"
         />
-    <item android:id="@+id/person_menu_share"
-        android:title="分享"
-        />
 </menu>

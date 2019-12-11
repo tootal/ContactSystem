@@ -106,9 +106,6 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
                         Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
                         ((MainActivity) mContext).refreshPersons();
                         break;
-                    case R.id.person_menu_share:
-                        Toast.makeText(mContext, "分享联系人", Toast.LENGTH_SHORT).show();
-                        break;
                 }
                 return true;
             }

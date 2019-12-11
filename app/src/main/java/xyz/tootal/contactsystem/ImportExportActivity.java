@@ -55,7 +55,6 @@ public class ImportExportActivity extends AppCompatActivity {
     private void findTextView(){
         import_testdata_textview=(TextView) findViewById(R.id.import_testdata_textview);
         import_systemdata_textview=(TextView) findViewById(R.id.import_systemdata_textview);
-        import_json_textview=(TextView) findViewById(R.id.import_json_textview);
         export_systemdata_textview=(TextView) findViewById(R.id.export_systemdata_textview);
     }
 
