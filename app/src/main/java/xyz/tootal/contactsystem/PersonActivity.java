@@ -72,7 +72,13 @@ public class PersonActivity extends AppCompatActivity {
         person_msg_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (ContextCompat.checkSelfPermission(PersonActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(PersonActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
+                    return;
+                } else {
+                    sendSMS(person.getNumber());
+                    //已有权限
+                }
             }
         });
     }
@@ -93,7 +99,12 @@ public class PersonActivity extends AppCompatActivity {
         intent.setData(data);
         startActivity(intent);
     }
-
+    public void sendSMS(String phoneNum){
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        Uri data = Uri.parse("smsto:" + phoneNum);
+        intent.setData(data);
+        startActivity(intent);
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {

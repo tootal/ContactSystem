@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,7 +89,14 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
                         mContext.startActivity(intent);
                         break;
                     case R.id.person_menu_edit:
-                        Toast.makeText(mContext, "编辑联系人", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext, "编辑联系人", Toast.LENGTH_SHORT).show();
+
+                        int PersonPosition = holder1.getAdapterPosition();
+                        Person personDetail = mPersonList.get(PersonPosition);
+                        Intent DetailIntent=new Intent(mContext,ModifyDetailActivity.class);
+                        DetailIntent.putExtra("person",personDetail);
+                        ((MainActivity) mContext).startActivityForResult(DetailIntent,1);
+//                        ((MainActivity) mContext).refreshPersons();
                         break;
                     case R.id.person_menu_delete:
 //                        Toast.makeText(mContext, "删除联系人", Toast.LENGTH_SHORT).show();
@@ -96,6 +104,7 @@ public class PersonAdapter extends RecyclerView.Adapter<PersonAdapter.ViewHolder
                         Person person1 = mPersonList.get(position1);
                         DataSupport.deleteAll(Person.class,"id = ?",String.valueOf(person1.getId()));
                         Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
+                        ((MainActivity) mContext).refreshPersons();
                         break;
                     case R.id.person_menu_share:
                         Toast.makeText(mContext, "分享联系人", Toast.LENGTH_SHORT).show();

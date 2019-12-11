@@ -31,6 +31,9 @@ public class Person extends DataSupport implements Serializable {
         this.name = name;
     }
 
+    public Person(){
+
+    }
 
     public Person(String name,String number) {
         setName(name);

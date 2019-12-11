@@ -58,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_about:
                         Toast.makeText(MainActivity.this, "由tootal、MouseHappy123联合制作", Toast.LENGTH_SHORT).show();
                         break;
+                    case R.id.nav_help:
+                        Intent intent=new Intent(MainActivity.this,HelpActivity.class);
+                        startActivity(intent);
                 }
                 mDrawerLayout.closeDrawers();
                 return true;
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         refreshPersons();
     }
 
-    private void refreshPersons() {
+    public void refreshPersons() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -153,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(this, "添加联系人成功", Toast.LENGTH_SHORT).show();
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(this, "已取消", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(this, "已取消", Toast.LENGTH_SHORT).show();
                         break;
                 }
             case 2://import
@@ -170,5 +173,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
         }
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        refreshPersons();
     }
 }
