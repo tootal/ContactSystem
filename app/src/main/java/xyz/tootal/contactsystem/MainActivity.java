@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                         if(testContactList2==null)break;
                         for(int i=0;i<testContactList2.size();i++){
                             Person person=(Person)testContactList2.get(i);
+                            person.setImageUri(Util.imageTranslateUri(this,R.drawable.avatar));
                             person.save();
                         }
                         refreshPersons();
