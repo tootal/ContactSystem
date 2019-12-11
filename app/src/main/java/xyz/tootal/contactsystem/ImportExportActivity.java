@@ -35,7 +35,6 @@ public class ImportExportActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private TextView import_testdata_textview;
     private TextView import_systemdata_textview;
-    private TextView import_json_textview;
     private TextView export_systemdata_textview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +76,6 @@ public class ImportExportActivity extends AppCompatActivity {
                     readSystemContacts();
                 }
 //                Toast.makeText(ImportExportActivity.this, "导入系统通讯录功能尚未实现", Toast.LENGTH_SHORT).show();
-            }
-        });
-        import_json_textview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(ImportExportActivity.this, "导入JSON文件功能尚未实现", Toast.LENGTH_SHORT).show();
             }
         });
         export_systemdata_textview.setOnClickListener(new View.OnClickListener() {
